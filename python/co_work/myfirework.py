@@ -1,0 +1,8 @@
+sim=t.Screen()
+build(sim,1000,1000)
+obj=robj(1)
+obj.sete("classic",[1,1],"red")
+obj.seta(1,-90,10)
+obj.setv(10,0,10)
+obj.move(10,0.1)
+obj.write(f"{obj.pos()}")

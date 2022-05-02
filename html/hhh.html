@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<script>
+			var n,r,k=false;
+			r=[21,89,787,787,988,2];
+			n=2;
+			while(true) {
+				for(i=0;i<=r.length;i++) {
+					if(n==r[i]) {
+						k=true;
+					}
+					else {
+						console.log("LOOP ON");
+					}
+				}
+				if(k) {
+					console.log("LOOP OUT")
+					break;
+				}
+			}
+		</script>
+	</body>
+</html>

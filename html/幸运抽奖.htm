@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>随机抽取app</title>
+        <style type="text/css"><!--css样式表-->
+            body {
+                background-color: white;
+            }
+            h1 {
+                text-align: center;
+                font-size: 125pt;
+            }
+            #OFF {
+                position: absolute;
+                top: 360px;
+                left: 300px;
+            }
+            #ON {
+                position: absolute;
+                top: 360px;
+                right: 320px;
+            }
+            #button1 {
+                width: 200pt;
+                height: 60pt;
+                font-size: 30pt;
+            }
+            #author {
+                position: fixed;
+                bottom: 0px;
+                left: 12px;
+            }
+        </style>
+        <script type="text/javascript"><!--javascript脚本(函数主体)-->
+            var name,ready,choose;
+            ready=[];
+            name=['谢泽浩','陈天宇','周圣','倪斯豪','蓝楼杰','王辰宇','陈梓行','郭洪飞','王夏',
+            '申博','刘俊','朱祎鑫','吴梦意','刘旭','唐臻炜','吕海星','朱少清','王佳杰','彭佳乐',
+            '石云飞','刘望臣','仲可儿','李雨澄','孔钱斌','陆一豪','沈晨浩','石骞','钱弈帆','周雯',
+            '芦佳菲','林雅琼','杜涵伊','费仲勋','刘睿琦','张雨嫣','管耀华','吴畏','陈紫楠',"程忠良"]
+            
+            function chouqu() {
+                choose=Math.floor(Math.random()*name.length);
+                if(ready.length==0) {
+                    document.getElementById("screen").innerHTML=name[choose];
+                    ready.push(choose);
+                }
+                else if(ready.length==name.length) {
+                    document.getElementById("screen").innerHTML="OVER";
+                    alert("所有人都抽过了,\n请重置!");
+                }
+                else {
+                    if(document.getElementById("loop").checked) {
+//console.log("LOOP ON");
+                        k=false;
+                        while(true) {
+                            choose=undefined;
+                            choose=Math.floor(Math.random()*name.length);
+                            for(i=0;i<=ready.length;i++) {
+                                if(choose==ready[i]) {
+                                    k=false;
+                                    break;
+                                }
+                                else {
+                                    k=true;
+                                }
+                            }
+                            if(k) {
+//console.log("LOOP OUT choose="+choose);
+                                document.getElementById("screen").innerHTML=name[choose];
+                                ready.push(choose);
+                                break;
+                            }
+                            else {
+//console.log("LOOP RUN choose="+choose);
+                            }
+                        }
+                    }
+                    else {
+                        document.getElementById("screen").innerHTML=name[choose];
+//console.log("LOOP OFF choose="+choose);
+                    }
+                }
+            }
+            
+            function t() {
+                console.log("Test:");
+                for(k=0;k<=ready.length-1;k++) {
+                    console.log(ready[k]);
+                }
+                console.log("lenght="+ready.length);
+                console.log("End");
+                console.log("name:"+name.length);
+            }
+            
+            function reset() {
+                ready=[];
+                alert("重置完毕!");
+//console.log("reset!");
+            }
+        </script>
+    </head>
+    <body>
+        <h1 id="screen">READY</h1>
+        <div id="OFF">重复抽取:<input type="radio" name="loop"/></div>
+        <div id="ON">不重复抽取:<input type="radio" name="loop" checked="checked" id="loop"/></div>
+        <h4 align="center"><button id="button1" type="button" value="click" onclick="chouqu()">随机抽取</button></h4>
+        <p id="author">Made by 王辰宇!</p>
+        <p align="center"><button type="button" value="none" onclick="reset()">RESET</button></p>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <p align="center">It's just a joke!</p>
+    </body>
+</html>

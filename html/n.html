@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>checkbox的案例</title>
+		<script type="text/javascript">
+			// 判断checkbox是否有选中
+			function howManyChecked() {
+				// 获取所有input框元素
+				var input = document.getElementsByTagName("input");
+				alert("获取到"+input.length+"个input框");
+				// 循环获取到的input框元素,判断是否名字为book
+				for (var i = 0; i < input.length; i++) {
+					if (input[i].name == "book" && input[i].type=="checkbox") {
+						if(input[i].checked==true) {
+							alert("这是选中框:"+input[i].value);
+						}
+					} 
+				}
+			}
+		</script>
+	</head>
+	<body>
+		姓名：<input type="text" name="name" id="name" value="张三" /><br/>
+		年龄：<input type="text" name="age" id="age" value="15" /><br/>
+		读书：
+		<input type="checkbox" name="book" value="语文" />语文
+		<input type="checkbox" name="book" value="数学" />数学
+		<input type="checkbox" name="book" value="英语" />英语
+		<input type="button" name="button" id="button" 
+			value="查看有几个checkbox被选中" onclick="howManyChecked()"/>
+	</body>
+</html>

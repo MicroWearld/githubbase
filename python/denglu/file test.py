@@ -1,0 +1,12 @@
+f=open('password.txt','a')
+a=input("ENTER:")
+f.write(a+"\n")
+f.close()
+f=open('password.txt','r')
+while f.readline()!="":
+    #print(f.readline())
+    x=f.tell()
+    #print(x)
+    print(f.readline())
+    f.seek(x,0)
+f.close()
