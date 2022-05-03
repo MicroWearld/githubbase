@@ -206,12 +206,14 @@ def noted(pos, note, c="black", font=None):
     return comment
 
 
-def plot(x_axis_data, y_axis_data, c="orange", ps=2, s=1, v=1, Label=None, label=False, ana=True):
+def plot(x_axis_data, y_axis_data, c="orange", ps=2, s=1, v=1, Label=None, label=False, ana=True, draw=False):
     "Draw data as line."
     arrow = Arrow(Label=Label, color=c, psize=ps, size=s,
                   speed=v, mark="classic", ana=ana)
     c = 0
     arrow.penup()
+    if draw:
+        arrow.begin_fill()
     try:
         arrow.goto(x_axis_data[0], y_axis_data[0])
     except IndexError:
@@ -225,6 +227,8 @@ def plot(x_axis_data, y_axis_data, c="orange", ps=2, s=1, v=1, Label=None, label
             if c % 500 == 0:
                 arrow.write(arrow.ycor())
             c += 1
+    if draw:
+        arrow.end_fill()
     return arrow
 
 
