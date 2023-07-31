@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Target</title>
+    <script>
+        function load(){
+            var click=document.getElementsByName("op");
+            var oncheck
+            var font=["wingdings","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa"]
+            for(i=0;i<click.length;i++) {
+                if(click[i].checked){
+                    oncheck=click[i].value
+                }
+            }
+            document.getElementById("turn").style.fontFamily=font[Math.floor(Math.random()*10)]
+            document.getElementById("main").style.visibility="hidden";
+            document.getElementById("circular").style.visibility="visible";
+            document.getElementById("load").style.visibility="visible"
+            }
+        
+        function allse() {
+            var item=document.getElementsByName("cb")
+            for(var i=0;i<item.length;i++) {
+                item.item(i).checked=true
+            }
+        }
+        
+        function allde() {
+            var item=document.getElementsByName("cb")
+            for(var i=0;i<item.length;i++) {
+                item.item(i).checked=false
+            }
+        }
+    </script>
+    <style>
+        @font-face {
+            font-family: "dejavu";
+            src: url("..\\webfont\\DejaVuSansMono.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: "sarasa";
+            src: url("..\\webfont\\sarasa-mono-sc-nerd-regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        p {
+            font-family: sarasa;
+            font-size: 15px;
+        }
+        
+        .opbt {
+            margin: 4px 2px 2px 2px
+        }
+        
+        #load{
+            visibility: hidden;
+            font-size: 1em;
+            text-align: center;
+            position: fixed;
+            width: 200px;
+            height: 100px;
+            left: 0;
+            top: 250px;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        
+        #float {
+            padding: 0px;
+            background-color: white;
+            margin: 0px 0px;
+            border: 2px inset gainsboro;
+            position: fixed;
+        }
+        
+        @keyframes spin {
+            from {}
+            to {transform: rotate(360deg);}
+        }
+        
+        #circular{
+            visibility: hidden;
+            animation: spin;
+            position: fixed;
+            animation-duration: 3s;
+            animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            animation-iteration-count: infinite;
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        #circular path { fill: none; }
+        #circular svg { display: block; overflow: visible; }
+    </style>
+</head>
+<div id="circular">
+    <svg viewBox="0 0 100 100">
+         <path d="M 0,50 a 50,50 0 1,1 0,1 z" id="circle" />
+             <text>
+                <textPath xlink:href="#circle" style="font-size: 20px;" id="turn"> Loading...... </textPath>
+             </text>
+    </svg>
+</div>
+<p id="load">操作处理中,请耐心等待</p>
+<body id="main">
+    <h4>目标目录 <i>{{pwd}}</i></h4>
+    <form name="control" method="post" action="/target">
+        <div id="float">
+            <input type="submit" value="前进" name="rop" onclick="load()" class="opbt"/>
+            <input type="submit" value="后退" name="rop" onclick="load()" class="opbt"/>
+            <input type="submit" value="跳转" name="rop" onclick="load()" class="opbt"/>
+            <input type="submit" value="刷新" name="rop" onclick="load()" class="opbt"/>
+            <br />
+            <input type="text" name="rnapore" autocomplete="off" placeholder="位置" style="margin: 5px 2px;width: 330px;font-family: dejavu;"/>
+        </div>
+        <br /><br /><br /><br />
+    <p style="font-family: dejavu;color: {{ color }};margin: 0px 0px;">{{info}}</p>
+    {% for i in screen.split("\n") %}
+        {% if i!="" and i[0]!="t"%}
+            <p>{{ i|safe }}<input type="checkbox" name="rcb" value="{{loop.index0-1}}"/></p>
+        {% elif i!="" and i[0]=="t" %}
+            <p>{{ i|safe }}</p>
+        {% endif %}
+    {% endfor %}
+    </form>
+</body>
+</html>

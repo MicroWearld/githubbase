@@ -154,6 +154,24 @@ def sinfo(X, Y, s=True, column=5, standard=21, rou=2, ste=1):
     print("-" * 42)
 
 
+def domain(start, end, step):
+    "Set your 'x' from start to end,which setp is step(defination of domain)."
+    lis = []
+    c = start
+    while c <= end:
+        lis.append(c)
+        c += step
+    return lis
+
+
+def integrate(f, bot, top, lim=0.00001):
+    x = domain(bot, top, lim)
+    x1, x2 = x[:-1], x[1:]
+    y = list(map(lambda a, b: (b - a) * f((b + a) / 2), x1, x2))
+    res = sum(y)
+    return res
+
+
 # Other name for functions:
 A = arrang
 C = combin

@@ -181,17 +181,17 @@ def sort_tree(data):
                     temp = temp.right
     return sort
 
-#--------------------------TEST------------------------------
+# --------------------------TEST------------------------------
 
 
-# bt, n = BinaryTree, None
-# t1 = bt([1, 2, 3, 4, 5, 6, 7], mode="array")
-# t2 = bt([1, [2, [4, n, n], [5, n, n]], [3, [6, n, n], [7, n, n]]], mode="list")
-# t3 = bt([1, bt([2, bt([4, n, n]), bt([5, n, n])]),
-#          bt([3, bt([6, n, n]), bt([7, n, n])])], mode="recursion")
+bt, n = BinaryTree, None
+t1 = bt([1, 2, 3, 4, 5, 6, 7], mode="array")
+t2 = bt([1, [2, [4, n, n], [5, n, n]], [3, [6, n, n], [7, n, n]]], mode="list")
+t3 = bt([1, bt([2, bt([4, n, n]), bt([5, n, n])]),
+        bt([3, bt([6, n, n]), bt([7, n, n])])], mode="recursion")
 
-# for i in [t1, t2, t3]:
-#     print(i.VLR(), i.LDR(), i.LRD())
+for i in [t1, t2, t3]:
+    print(i.VLR(), i.LDR(), i.LRD())
 
-# sort = sort_tree([3, 1, 7, 8, 9, 0, 2, 4, 6, 5])
-# print(sort.LDR())
+sort = sort_tree([3, 1, 7, 8, 9, 0, 2, 4, 6, 5])
+print(sort.LDR())

@@ -8,6 +8,14 @@ class Variable(list):
         list.__init__([])
         self.extend([*args])
 
+    def ifwhat(self, exp, yes, no=None):
+        for i in range(len(self)):
+            if exp(self[i]):
+                self[i] = yes
+            elif not exp(self[i]) and no != None:
+                self[i] = no
+        return self
+
     def __add__(self, otro):
         if isinstance(otro, (int, float)):
             c = tuple(map(lambda a: a + otro, self))
@@ -107,15 +115,14 @@ class Variable(list):
         return Variable(*c)
 
     def __round__(self, ndigits=0):
-        c = tuple(map(lambda a: round(a, ndigits), self))
+        if ndigits == 0:
+            c = tuple(map(lambda a: int(a), self))
+        else:
+            c = tuple(map(lambda a: round(a, ndigits), self))
         return Variable(*c)
 
     def __abs__(self):
         c = tuple(map(lambda a: abs(a), self))
-        return Variable(*c)
-
-    def __int__(self):
-        c = tuple(map(lambda a: int(a), self))
         return Variable(*c)
 
     def __float__(self):
@@ -128,6 +135,22 @@ class Variable(list):
 
     def __pos__(self):
         c = tuple(map(lambda a: +a, self))
+        return Variable(*c)
+
+    def __invert__(self):
+        c = tuple(map(lambda a: ~a, self))
+        return Variable(*c)
+
+    def __and__(self, otrd):
+        c = tuple(map(lambda a, b: a & b, self, otrd))
+        return Variable(*c)
+
+    def __or__(self, otrd):
+        c = tuple(map(lambda a, b: a | b, self, otrd))
+        return Variable(*c)
+
+    def __xor__(self, otrd):
+        c = tuple(map(lambda a, b: a ^ b, self, otrd))
         return Variable(*c)
 
 

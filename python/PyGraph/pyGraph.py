@@ -1,5 +1,5 @@
-from turtle import Turtle, Screen, Terminator, register_shape, Shape
-from math import ceil, degrees, atan, pi, e, tau
+from turtle import Turtle, Screen, Terminator, register_shape, Shape, Vec2D
+from math import ceil, floor, degrees, atan, pi, e, tau
 from tkinter import Menu, Widget, Tk, Button, Entry, Label
 import tkinter.messagebox as tmb
 from Variable import *
@@ -9,14 +9,11 @@ GraphInterrupt = Terminator  # Other name for Terminator.
 
 "This module is developed via turtle,so you can use any option from turtle."
 
-__all__ = ["Graph", "GraphInterrupt", "build_graph",
+__all__ = ["Graph", "GraphInterrupt", "build_graph", "Vec2D",
            "domain", "plot", "legend", "scatter", "setresizable", "setaxis",
            "bar", "legend", "noted", "vsin", "vcos", "vtan"]
 __version__ = 1.0
-save = [None, None, None]
-
-register_shape("info", Shape(
-    "polygon", ((0.00, 0.00), (-4, 10.00), (0, 0), (4, 10), (0, 0), (0, 16))))
+save = [None, None, None, None]
 
 
 class DomainError(Exception):
@@ -35,7 +32,7 @@ class Arrow(Turtle):
         self.shape(mark)
         self.shapesize(size)
         self.label = Label
-        self.color = color
+        self.c = color
         if ana:
             self.st()
         else:
@@ -59,58 +56,98 @@ class Arrow(Turtle):
         self.speed(self.speed1)
         self.goto(x, y)
 
+    def cgo(self, comp):
+        if isinstance(comp, complex):
+            self.goto(comp.real, comp.imag)
+        elif isinstance(comp, (int, float)):
+            self.goto(comp, 0)
+        else:
+            try:
+                comp = float(comp)
+                self.goto(comp, 0)
+            except ValueError:
+                raise ValueError("Non-Number position!")
 
-def build_graph(screen, lim, per, le, delay=0, ruler=[True, True], label=["x", "y"], obje=True):
+
+def build_graph(screen, lim, per, le, color="black", grid=False, delay=0, ruler=[True, True], label=["x", "y"], obje=True):
     def clickon(tur, x, y):
         tur.clear()
         tur.goto(x, y)
         tur.write(tur.pos(), align="right")
 
     global xline, yline, save
-    "Build graphfic screen."
+    "Build graphic screen."
+    save[0], save[1], save[2], save[3] = lim, ruler, label, grid
+    register_shape("info", Shape(
+        "polygon", ((0.00, 0.00), (-4, 10.00), (0, 0), (4, 10), (0, 0), (0, 16))))
     screen.delay(0)
     screen.title("pyGraphic plot")
-    x = lim[0] / 2
-    y = lim[1] / 2
+    x, y = lim
+    lim = list(map(lambda x: x * 2, lim))
     xline = Turtle()
-    xline.write(" 0", align="left")
     yline = Turtle()
     for line in [xline, yline]:
+        line.color(color)
         line.ht()
         line.up()
         line.speed(0)
+    xline.write(" 0", align="left")
     xline.goto(-x, 0)
     yline.goto(0, -y)
     xline.down()
     yline.down()
     yline.lt(90)
-    for i in range(ceil(lim[0] // per[0])):
+    for i in range(floor(lim[0] // per[0])):
+        xy = xline.ycor()
         if ruler[0] and xline.xcor() != 0:
             xline.write(round(xline.xcor(), 2))
+        if grid and xline.xcor() != 0:
+            xline.color("gray")
+            xline.goto(xline.xcor(), xy - y)
+            xline.goto(xline.xcor(), xy + y)
+            xline.goto(xline.xcor(), xy)
+            xline.color("black")
+        else:
+            xline.goto(xline.xcor(), xy + le[0])
+            xline.goto(xline.xcor(), xy)
         xline.fd(per[0])
-        xx = xline.xcor()
-        xy = xline.ycor()
-        xline.goto(xx, xy + le[0])
-        xline.goto(xx, xy)
-    for i in range(ceil(lim[1] // per[1])):
+    if grid:
+        xline.color("gray")
+        xline.goto(xline.xcor(), xy - y)
+        xline.goto(xline.xcor(), xy + y)
+        xline.goto(xline.xcor(), xy)
+        xline.color("black")
+    for i in range(floor(lim[1] // per[1])):
+        yx = yline.xcor()
         if ruler[1] and yline.ycor() != 0:
             yline.write(round(yline.ycor(), 2), align="right")
+        if grid and yline.ycor() != 0:
+            yline.color("gray")
+            yline.goto(yx - x, yline.ycor())
+            yline.goto(yx + x, yline.ycor())
+            yline.goto(yx, yline.ycor())
+            yline.color("black")
+        else:
+            yline.goto(yx + le[1], yline.ycor())
+            yline.goto(yx, yline.ycor())
         yline.fd(per[1])
-        yx = yline.xcor()
-        yy = yline.ycor()
-        yline.goto(yx + le[1], yy)
-        yline.goto(yx, yy)
+    if grid:
+        yline.color("gray")
+        yline.goto(yx - x, yline.ycor())
+        yline.goto(yx + x, yline.ycor())
+        yline.goto(yx, yline.ycor())
+        yline.color("black")
     xline.st()
     yline.st()
     xline.write(label[0], align="left", font=(10,))
     yline.write(label[1], align="left", font=(10,))
     screen.delay(delay)
-    save[0], save[1], save[2] = lim, ruler, label
     _setop(screen)
     if obje:
         click = Turtle()
-        click.color("black")
+        click.color(color)
         click.shape("info")
+        click.speed(0)
         click.shapesize(.8)
         click.seth(90)
         click.up()
@@ -129,7 +166,7 @@ def _setop(tk):
             yline.clear()
             setaxis(tk, x, y, lx, ly)
             build_graph(tk, save[0], [dx, dy], [ly / 100, lx / 100],
-                        ruler=save[1], label=save[2], obje=False)
+                        ruler=save[1], label=save[2], grid=save[3], obje=False)
 
     def dele(e1, e2, e3, e4, e5, e6):
         for i in [e1, e2, e3, e4, e5, e6]:
@@ -176,7 +213,7 @@ def domain(start, end, step):
     "Set your 'x' from start to end,which setp is step(defination of domain)."
     lis = []
     c = start
-    while c < end:
+    while c <= end:
         lis.append(c)
         c += step
     return Variable(*tuple(lis))
@@ -191,7 +228,7 @@ def legend(graph, pos, font=None):
     c = 0
     for arrows in graph.turtles()[::-1]:
         if type(arrows) is Arrow:
-            comment.color(arrows.color)
+            comment.color(arrows.c)
             comment.write(arrows.label + "\n" * c, font=font)
             c += 1
 
@@ -206,28 +243,24 @@ def noted(pos, note, c="black", font=None):
     return comment
 
 
-def plot(x_axis_data, y_axis_data, c="orange", ps=2, s=1, v=1, Label=None, label=False, ana=True, draw=False):
+def plot(x_axis_data, y_axis_data, c="orange", ps=2, v=0, Label=None, ana=True, fill=False):
     "Draw data as line."
-    arrow = Arrow(Label=Label, color=c, psize=ps, size=s,
+    arrow = Arrow(Label=Label, color=c, psize=ps,
                   speed=v, mark="classic", ana=ana)
-    c = 0
-    arrow.penup()
-    if draw:
-        arrow.begin_fill()
+    arrow.up()
     try:
         arrow.goto(x_axis_data[0], y_axis_data[0])
     except IndexError:
         raise DomainError("Empty domain,please check your code!")
-    if label:
-        arrow.write(arrow.pos())
-    arrow.pendown()
-    for i in range(1, len(x_axis_data)):
-        arrow.draw(x_axis_data[i], y_axis_data[i])
-        if label:
-            if c % 500 == 0:
-                arrow.write(arrow.ycor())
-            c += 1
-    if draw:
+    arrow.down()
+    if fill:
+        arrow.begin_fill()
+    try:
+        for i in range(1, len(x_axis_data)):
+            arrow.draw(x_axis_data[i], y_axis_data[i])
+    except IndexError:
+        pass
+    if fill:
         arrow.end_fill()
     return arrow
 

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Python File Browser</title>
+    <script>
+        function load(){
+            var click=document.getElementsByName("op");
+            var oncheck
+            var font=["wingdings","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa","sarasa"]
+            for(i=0;i<click.length;i++) {
+                if(click[i].checked){
+                    oncheck=click[i].value
+                }
+            }
+            document.getElementById("turn").style.fontFamily=font[Math.floor(Math.random()*10)]
+            document.getElementById("main").style.visibility="hidden";
+            document.getElementById("circular").style.visibility="visible";
+            document.getElementById("load").style.visibility="visible"
+            }
+        
+        function allse() {
+            var item=document.getElementsByName("cb")
+            for(var i=0;i<item.length;i++) {
+                item.item(i).checked=true
+            }
+        }
+        
+        function allde() {
+            var item=document.getElementsByName("cb")
+            for(var i=0;i<item.length;i++) {
+                item.item(i).checked=false
+            }
+        }
+    </script>
+    <style>
+        @font-face {
+            font-family: "dejavu";
+            src: url("..\\webfont\\DejaVuSansMono.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: "sarasa";
+            src: url("..\\webfont\\sarasa-mono-sc-nerd-regular.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        p {
+            font-family: sarasa;
+            font-size: 17px;
+        }
+        
+        .opbt {
+            margin: 3px 1px;
+        }
+        
+        #load{
+            visibility: hidden;
+            font-size: 1em;
+            text-align: center;
+            position: fixed;
+            width: 200px;
+            height: 100px;
+            left: 0;
+            top: 250px;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+        
+        #float {
+            padding: 4px;
+            background-color: white;
+            margin: 26px 0px;
+            border: 2px inset gainsboro;
+            position: fixed;
+        }
+        
+        #target {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            width: 500px;
+            height: 265px;
+            background-color: white;
+        }
+        
+        @keyframes spin {
+            from {}
+            to {transform: rotate(360deg);}
+        }
+        
+        #circular{
+            visibility: hidden;
+            animation: spin;
+            position: fixed;
+            animation-duration: 3s;
+            animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            animation-iteration-count: infinite;
+            width: 100px;
+            height: 100px;
+            margin: 10px;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+        }
+
+        #circular path { fill: none; }
+        #circular svg { display: block; overflow: visible; }
+    </style>
+</head>
+<div id="circular">
+    <svg viewBox="0 0 100 100">
+         <path d="M 0,50 a 50,50 0 1,1 0,1 z" id="circle" />
+             <text>
+                <textPath xlink:href="#circle" style="font-size: 20px;" id="turn"> Loading...... </textPath>
+             </text>
+    </svg>
+</div>
+<p id="load">操作处理中,请耐心等待</p>
+<body id="main">
+    <iframe src="/target" id="target"></iframe>
+    <h1><i>欢迎!&nbsp;&nbsp;{{user}}</i></h1>
+    <h3>当前目录 <i>{{pwd}}</i></h3>
+    <form name="file" method="POST" action="/" enctype="multipart/form-data">
+        <div style="position: fixed;background-color: white;border: 2px inset gainsboro;">
+            <input type="file" name="file" multiple/>
+            <input type="submit" value="发送" onclick="load()"/>
+        </div>
+    </form>
+    <form name="control" method="post" action="/">
+        <div id="float">
+            <input type="submit" value="新建文件夹" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="重命名" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="移动" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="复制" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="删除" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="下载" name="op" class="opbt"/>
+            <input type="submit" value="压缩" name="op" onclick="load()" class="opbt"/>
+            <br />
+            <input type="submit" value="前进" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="后退" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="跳转" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="交换" name="op" onclick="load()" class="opbt"/>
+            <input type="submit" value="刷新" name="op" onclick="load()" class="opbt"/>
+            <br />
+            <input type="text" name="napore" autocomplete="off" placeholder="名称|位置|条件" style="margin: 10px 2px;width: 350px;font-family: dejavu;"/>
+            <input type="checkbox" name="reg" {{ck}}/>筛选
+        </div>
+        <br /><br /><br /><br /><br /><br /><br />
+    <div>
+        <button type="button" style="position: fixed;margin: 15px 0px;" onclick="allse()">全选</button>
+        <button type="button" style="position: fixed;left: 60px;margin: 15px 0px;" onclick="allde()">全不选</button>
+    </div>
+    <br /><br />
+    <p style="font-family: dejavu;color: {{ color }};">{{info}}</p>
+    {% for i in screen.split("\n") %}
+        {% if i!="" and i[0] in "0123456789" %}
+            <p>{{ i|safe }}<input type="checkbox" name="cb" value="{{loop.index0-1}}"/></p>
+        {% elif i!="" and i[0] not in "0123456789" %}
+            <p>{{ i|safe }}</p>
+        {% endif %}
+    {% endfor %}
+    </form>
+</body>
+</html>
